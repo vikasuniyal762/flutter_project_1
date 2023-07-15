@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'Login_Home_Page.dart';
+import 'Login_Main_Page.dart';
+
 
 void main() {
   runApp(const MaterialApp(
@@ -25,20 +26,5 @@ class MyApp extends StatelessWidget {
      // home: SecondPageState(),
       home:const LoginPage(),
     );
-  }
-}
-
-class SecondPageState extends StatefulWidget {
-  const SecondPageState({super.key});
-
-  @override
-  State<SecondPageState> createState() => _SecondPageStateState();
-}
-
-class _SecondPageStateState extends State<SecondPageState> {
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold();
   }
 }
