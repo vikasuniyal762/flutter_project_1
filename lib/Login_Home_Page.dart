@@ -72,6 +72,11 @@ class _LoginPageState extends State<LoginPage> {
                           _isEmailValid = true; // Set to true if email is valid
                           return null;
                         },
+                          onFieldSubmitted: (_) {
+                            // FocusNode().unfocus();
+                            // Move to the next field
+                            FocusScope.of(context).nextFocus();
+                          }
                       ),
                     ),
                     SizedBox(
@@ -84,11 +89,11 @@ class _LoginPageState extends State<LoginPage> {
                         decoration: InputDecoration(
                           hintText: "Please enter your password",
                           prefixIcon: const Icon(Icons.lock, color: Color(0xff03168a)),
-                          enabledBorder: _isEmailValid
-                              ? null
-                              : const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
+                          // enabledBorder: _isEmailValid
+                          //     ? null
+                          //     : const OutlineInputBorder(
+                          //   borderSide: BorderSide(color: Colors.white),
+                          // ),
                         ),
                         validator: (value) {
                           if (_isEmailValid) {
