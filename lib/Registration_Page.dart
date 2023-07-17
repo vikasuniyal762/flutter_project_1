@@ -176,9 +176,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         keyboardType: TextInputType.text,
                         obscureText: true,
                         enabled: _isMobileValid,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Please enter your password",
-                          prefixIcon: const Icon(Icons.lock,color: AppStrings.themecolor1,),
+                          prefixIcon: Icon(Icons.lock,color: AppStrings.themecolor1,),
                         ),
                         validator: (value) {
                           if (_isMobileValid) {
@@ -198,9 +198,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
                         keyboardType: TextInputType.text,
                         obscureText: true,
                         enabled: _isMobileValid,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           hintText: "Please confirm your password",
-                          prefixIcon: const Icon(Icons.lock,color: AppStrings.themecolor1,),
+                          prefixIcon: Icon(Icons.lock,color: AppStrings.themecolor1,),
                         ),
                         validator: (value) {
                           if (_isMobileValid) {
