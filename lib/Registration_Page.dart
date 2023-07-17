@@ -1,296 +1,234 @@
-
 import 'package:flutter/material.dart';
-import 'package:flutter_project_1/localizedstrings.dart';
+
+import 'localizedstrings.dart';
 
 void main() {
   runApp(const MaterialApp(
-    home: RegestrationPage(),
+    home: RegistrationPage(),
     debugShowCheckedModeBanner: false,
     title: '',
-  )
-  );
+  ));
 }
 
-class RegestrationPage extends StatefulWidget {
-  const RegestrationPage({Key? key}) : super(key: key);
+class RegistrationPage extends StatefulWidget {
+  const RegistrationPage({Key? key}) : super(key: key);
 
   @override
-  State<RegestrationPage> createState() => _RegestrationPageState();
+  State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
-class _RegestrationPageState extends State<RegestrationPage> {
+class _RegistrationPageState extends State<RegistrationPage> {
   final _formKey = GlobalKey<FormState>();
-  TextEditingController _emailController=TextEditingController();
-  TextEditingController _passwordController= TextEditingController();
-  TextEditingController _userNameController= TextEditingController();
-  bool _doNotRememberPassword = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _mobileController = TextEditingController();
   bool _isEmailValid = false;
-  bool _isUserNameValid=false;
-  final _passwordFocusNode = FocusNode();
-  final _emailFocusNode = FocusNode();
-  final _userNameFocusNode=FocusNode();
-
+  bool _isUserNameValid = false;
+  bool _isMobileValid = false;
 
   @override
-  void initState() {
-    super.initState();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
-  }
-
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _confirmPasswordController.dispose();
     _userNameController.dispose();
-    _passwordFocusNode.dispose();
-    _emailFocusNode.dispose();
-    _userNameFocusNode.dispose();
+    _mobileController.dispose();
     super.dispose();
+  }
+
+  bool _validateUserName(String value) {
+    if (value.isEmpty) {
+      return false;
+    }
+    if (!isUserNameValid(value)) {
+      return false;
+    }
+    return true;
+  }
+
+  bool _validateEmail(String value) {
+    if (value.isEmpty) {
+      return false;
+    }
+    if (!isValidEmail(value)) {
+      return false;
+    }
+    return true;
+  }
+
+  bool _validateMobileNum(String value) {
+    if (value.isEmpty) {
+      return false;
+    }
+    if (!isMobileNumValid(value)) {
+      return false;
+    }
+    return true;
+  }
+
+  bool _validatePassword(String value) {
+    if (value.isEmpty) {
+      return false;
+    }
+    final RegExp passwordRegex =
+    RegExp(r'^(?=.*[A-Z])(?=.*[0-9])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+    return passwordRegex.hasMatch(value);
+  }
+
+  bool _validateConfirmPassword(String value) {
+    if (value.isEmpty) {
+      return false;
+    }
+    return value == _passwordController.text;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(70),
-          child: Center(
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.85,
-              height: MediaQuery.of(context).size.height * 0.85,
-              decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0xff03168a),
-                    spreadRadius: 4,
-                    blurRadius: 30,
-                    offset: Offset(0, 4),
-                  ),
-                ],
-                borderRadius: BorderRadius.circular(50),
-                color: Colors.white,
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CircleAvatar(
-                      backgroundImage: AssetImage('assets/imglogo.png'),
-                      backgroundColor: Colors.white,
-                      radius: 100,
-                      //child: Text('its me'),
-                    ),
-                    const SizedBox(height: 10),
-
-                    ///USER NAME FIELD
-                    // SizedBox(
-                    //   width: 350,
-                    //   child: TextFormField(
-                    //     controller: _userNameController,
-                    //     focusNode: _userNameFocusNode,
-                    //     keyboardType: TextInputType.text,
-                    //     decoration: const InputDecoration(
-                    //       hintText: "User Name ",
-                    //       prefixIcon: Icon(Icons.account_circle, color: AppStrings.themecolor1),
-                    //       suffixIcon: Tooltip(triggerMode: TooltipTriggerMode.tap,
-                    //       message: '''Username must be between 3 and 20 characters long
-                    //                    and can only contain letters, numbers, and
-                    //                    underscores.''',
-                    //         padding: EdgeInsets.all(10),
-                    //         preferBelow: true,
-                    //         verticalOffset: 300,
-                    //         child: Icon(Icons.info_outline,
-                    //         // color: _isUserNameValid ? Colors.grey : Colors.red,
-                    //       ),
-                    //     ),
-                    //     ),
-                    //     validator: (value) {
-                    //       if (_isUserNameValid) {
-                    //         if (value == null || value.isEmpty) {
-                    //           return 'Please enter your username';
-                    //         }
-                    //         // Add additional username validation if needed
-                    //       } else {
-                    //         return 'Please enter a valid username';
-                    //       }
-                    //       return null;
-                    //     },
-                    //     textInputAction: TextInputAction.next,
-                    //     onFieldSubmitted: (_) {
-                    //       setState(() {
-                    //         _isUserNameValid = _formKey.currentState!.validate();
-                    //       });
-                    //       if (_isUserNameValid) {
-                    //         _userNameFocusNode.unfocus(); //for hide the keyboard
-                    //         FocusScope.of(context).requestFocus(_emailFocusNode); //for focus on next field
-                    //       }
-                    //     },
-                    //   ),
-                    // ),
-
-                    SizedBox(
-                      width: 350,
-                      child: TextFormField(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const CircleAvatar(
+                  backgroundImage: AssetImage('assets/imglogo.png'),
+                  backgroundColor: Colors.white,
+                  radius: 100,
+                ),
+                const SizedBox(height: 20),
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    children: [
+                      TextFormField(
                         controller: _userNameController,
-                        focusNode: _userNameFocusNode,
                         keyboardType: TextInputType.text,
                         decoration: const InputDecoration(
                           hintText: "User Name",
-                          prefixIcon: Icon(Icons.account_circle, color: AppStrings.themecolor1),
-                          suffixIcon: Tooltip(
-                            triggerMode: TooltipTriggerMode.tap,
-                            message: '''Username must be between 3 and 20 characters long 
-                     and can only contain letters, numbers, and 
-                     underscores.''',
-                            padding: EdgeInsets.all(10),
-                            preferBelow: true,
-                            verticalOffset: 300,
-                            child: Icon(Icons.info_outline),
-                          ),
+                          prefixIcon: Icon(Icons.account_circle,color: AppStrings.themecolor1,),
                         ),
                         validator: (value) {
-                          if (_isUserNameValid) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your username';
-                            }
-                            // Add additional username validation if needed
-                          } else {
-                            return 'Please enter a valid username';
+                          if (!_validateUserName(value ?? "")) {
+                            return 'Please enter a valid user name';
                           }
                           return null;
                         },
-                        textInputAction: TextInputAction.next,
                         onFieldSubmitted: (_) {
+                          _formKey.currentState!.validate();
                           setState(() {
-                            _isUserNameValid = _formKey.currentState!.validate();
+                            _isUserNameValid =
+                                _validateUserName(_userNameController.text);
                           });
-                          if (_isUserNameValid) {
-                            _userNameFocusNode.unfocus(); //for hide the keyboard
-                            FocusScope.of(context).requestFocus(_emailFocusNode); //for focus on next field
-                          }
                         },
                       ),
-                    ),
-                    ///EMAIL FIELD
-                    SizedBox(
-                      width: 350,
-                      child: TextFormField(
+                      const SizedBox(height: 10),
+                      TextFormField(
                         controller: _emailController,
-                        focusNode: _emailFocusNode,
                         keyboardType: TextInputType.emailAddress,
-                       obscureText: true,
                         enabled: _isUserNameValid,
                         decoration: const InputDecoration(
                           hintText: "Please enter your email address",
-                          prefixIcon: Icon(Icons.mail, color: AppStrings.themecolor1),
+                          prefixIcon: Icon(Icons.mail,color: AppStrings.themecolor1,),
                         ),
                         validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email address';
-                          }
-                          if (!isValidEmail(value)) {
+                          if (!_validateEmail(value ?? "")) {
                             return 'Please enter a valid email address';
                           }
                           return null;
                         },
-                        textInputAction: TextInputAction.next,
                         onFieldSubmitted: (_) {
+                          _formKey.currentState!.validate();
                           setState(() {
-                            _isEmailValid = _formKey.currentState!.validate();
+                            _isEmailValid = _validateEmail(_emailController.text);
                           });
-                          if (_isEmailValid && _isUserNameValid ) {
-                            _emailFocusNode.unfocus(); //for hide the keyboard
-                            FocusScope.of(context).requestFocus(_passwordFocusNode);//for focus on next field
-                          }
                         },
                       ),
-                    ),
-                    SizedBox(
-                      width: 350,
-                      child: TextFormField(
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: _mobileController,
+                        keyboardType: TextInputType.phone,
+                        enabled: _isEmailValid,
+                        decoration: const InputDecoration(
+                          hintText: "Please enter your mobile number",
+                          prefixIcon: Icon(Icons.phone,color: AppStrings.themecolor1,),
+                        ),
+                        validator: (value) {
+                          if (!_validateMobileNum(value ?? "")) {
+                            return 'Please enter a valid mobile number';
+                          }
+                          return null;
+                        },
+                        onFieldSubmitted: (_) {
+                          _formKey.currentState!.validate();
+                          setState(() {
+                            _isMobileValid =
+                                _validateMobileNum(_mobileController.text);
+                          });
+                        },
+                      ),
+                      const SizedBox(height: 10),
+                      TextFormField(
                         controller: _passwordController,
-                        focusNode: _passwordFocusNode,
                         keyboardType: TextInputType.text,
                         obscureText: true,
-                        enabled: _isEmailValid,
+                        enabled: _isMobileValid,
                         decoration: InputDecoration(
                           hintText: "Please enter your password",
-                          prefixIcon: const Icon(Icons.lock, color: AppStrings.themecolor1),
-                          enabledBorder: _isEmailValid
-                              ? null
-                              : const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
+                          prefixIcon: const Icon(Icons.lock,color: AppStrings.themecolor1,),
                         ),
                         validator: (value) {
-                          if (_isEmailValid) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                          if (_isMobileValid) {
+                            if (!_validatePassword(value ?? "")) {
+                              return 'Please enter a valid password';
                             }
-                            // Add additional password validation if needed
                           }
                           return null;
                         },
                         onFieldSubmitted: (_) {
-                          // Hide the keyboard
-                          _passwordFocusNode.unfocus();
+                          _formKey.currentState!.validate();
                         },
                       ),
-                    ),
-
-                    SizedBox(
-                      width: 350,
-                      child: TextFormField(
-                        controller: _passwordController,
-                        focusNode: _passwordFocusNode,
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        controller: _confirmPasswordController,
                         keyboardType: TextInputType.text,
                         obscureText: true,
-                        enabled: _isEmailValid,
+                        enabled: _isMobileValid,
                         decoration: InputDecoration(
-                          hintText: "Confirm Password",
-                          prefixIcon: const Icon(Icons.lock, color: AppStrings.themecolor1),
-                          enabledBorder: _isEmailValid
-                              ? null
-                              : const OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
+                          hintText: "Please confirm your password",
+                          prefixIcon: const Icon(Icons.lock,color: AppStrings.themecolor1,),
                         ),
                         validator: (value) {
-                          if (_isEmailValid) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter your password';
+                          if (_isMobileValid) {
+                            if (!_validateConfirmPassword(value ?? "")) {
+                              return 'Passwords do not match';
                             }
-                            // Add additional password validation if needed
                           }
                           return null;
                         },
                         onFieldSubmitted: (_) {
-                          // Hide the keyboard
-                          _passwordFocusNode.unfocus();
+                          _formKey.currentState!.validate();
                         },
                       ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.only(top: 40.0),
-                      child: SizedBox(
-                        width: 200,
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
                         child: RawMaterialButton(
                           fillColor: AppStrings.themecolor1,
-                          elevation: 0.0,
-                          padding: const EdgeInsets.symmetric(vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          onPressed: () async {
-                            if (_formKey.currentState!.validate()) {
-                              // Form is valid, perform login operation
-                              // You can access the email and password using _emailController.text and _passwordController.text respectively
-                              await performLogin();
+                          onPressed: () {
+                            _formKey.currentState!.validate();
+                            if (_isMobileValid &&
+                                _isEmailValid &&
+                                _isUserNameValid) {
+                              _performRegistration();
                             }
                           },
                           child: const Text(
-                            "Login",
+                            "Submit",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 18.0,
@@ -298,35 +236,38 @@ class _RegestrationPageState extends State<RegestrationPage> {
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
           ),
-        )
+        ),
+      ),
     );
   }
 
-  Future<void> performLogin() async {
-    // Your login logic goes here
+  Future<void> _performRegistration() async {
     final email = _emailController.text;
     final password = _passwordController.text;
 
-    // Perform the login operation using the email and password
+    // Perform the registration operation using the email and password
+  }
+
+  bool isValidEmail(String value) {
+    final RegExp emailRegex = RegExp(
+      r'^[\w-]+(\.[\w-]+)*@[a-zA-Z\d-]+(\.[a-zA-Z\d-]+)*\.[a-zA-Z\d-]{2,}$',
+    );
+    return emailRegex.hasMatch(value);
+  }
+
+  bool isUserNameValid(String input) {
+    final RegExp userRegex = RegExp(r'^[a-zA-Z0-9_]{3,20}$');
+    return userRegex.hasMatch(input);
+  }
+
+  bool isMobileNumValid(String value) {
+    final RegExp mobileRegex = RegExp(r'^\d{10}$');
+    return mobileRegex.hasMatch(value);
   }
 }
-
-bool isValidEmail(String value) {
-  final RegExp emailRegex = RegExp(
-    r'^[\w-]+(\.[\w-]+)*@[a-zA-Z\d-]+(\.[a-zA-Z\d-]+)*\.[a-zA-Z\d-]{2,}$',
-  );
-  return emailRegex.hasMatch(value);
-}
-
-bool isUserNameValid(String input) {
-  final RegExp userRegex = RegExp(r'^[a-zA-Z0-9]+$');
-  return userRegex.hasMatch(input);
-}
-
-
